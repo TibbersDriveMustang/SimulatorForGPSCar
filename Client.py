@@ -8,12 +8,12 @@ class Client:
 
 
     #Initialization
-    def __init__(self, master, server_addr, server_port):
+    def __init__(self, master, serveraddr, serverport):
         self.master = master
-        self.master.protocol("WM_DELETE_WINDOW",self.handler)
-        self.createWidgets()
-        self.server_addr = server_addr
-        self.server_port = server_port
+        #self.master.protocol("WM_DELETE_WINDOW",self.handler)
+        #self.createWidgets()
+        self.server_addr = serveraddr
+        self.server_port = int(serverport)
         self.connectToServer()
 
 
@@ -27,9 +27,9 @@ class Client:
         ....
 
     """
-    def connectTOServer(self):
+    def connectToServer(self):
         "Connect to server"
-        self.TCPSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        self.TCPSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             self.TCPSocket.connect((self.server_addr, self.server_port))
         except:
@@ -46,8 +46,7 @@ if __name__ == "__main__":
 	root = Tk()
 
 	# Create a new client
-	#app = Client(root, serverAddr, serverPort, rtpPort, fileName)
-	app = Client(root,serverAddr,serverPort)
-	#app.master.title("RTPClient")
+
+	app = Client(root, serverAddr, serverPort)
 	app.master.title("PythonClient")
 	root.mainloop()
