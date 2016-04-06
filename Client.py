@@ -35,7 +35,7 @@ class Client:
             tkMessageBox.showwarning('Connection Failed', 'Connection to \'%s\' failed.' %self.server_addr)
 
     def sendDataToiOS(self):
-        packet = "Hello iOS"
+        packet = "setUpPeerToPeer"
         self.TCPSocket.send(packet)
 
     def handler(self):
