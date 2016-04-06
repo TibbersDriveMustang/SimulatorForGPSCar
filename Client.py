@@ -10,7 +10,7 @@ class Client:
     #Initialization
     def __init__(self, master, serveraddr, serverport):
         self.master = master
-        #self.master.protocol("WM_DELETE_WINDOW",self.handler)
+        self.master.protocol("WM_DELETE_WINDOW",self.handler)
         #self.createWidgets()
         self.server_addr = serveraddr
         self.server_port = int(serverport)
@@ -34,6 +34,16 @@ class Client:
             self.TCPSocket.connect((self.server_addr, self.server_port))
         except:
             tkMessageBox.showwarning('Connection Failed', 'Connection to \'%s\' failed.' %self.server_addr)
+
+    def handler(self):
+        """Handler on explicitly closing the GUI Window."""
+        if tkMessageBox.askokcancel("Quit?"):
+            self.exitClient();
+
+    def exitClient(self):
+        """Exit button handler"""
+        self.master.destroy()
+        sys.exit(0)
 
 
 if __name__ == "__main__":
