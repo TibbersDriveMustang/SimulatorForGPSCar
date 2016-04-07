@@ -11,6 +11,9 @@ class Client:
     def __init__(self, master, serveraddr, serverport):
         self.master = master
         self.master.protocol("WM_DELETE_WINDOW",self.handler)
+        self.localPort = 0
+        self.localIP = ""
+
         self.createWidgets()
         self.server_addr = serveraddr
         self.server_port = int(serverport)
@@ -33,15 +36,26 @@ class Client:
             self.TCPSocket.connect((self.server_addr, self.server_port))
         except:
             tkMessageBox.showwarning('Connection Failed', 'Connection to \'%s\' failed.' %self.server_addr)
+        try:
+            self.localIP = (self.TCPSocket.getsockname()[0])
+            self.localPort = (self.TCPSocket.getsockname()[1])
+            print("Local port number")
+            print(self.localPort)
+        except:
+            tkMessageBox.showwarning('Failed', 'get local port number failed.')
 
     def sendDataToiOS(self):
         packet = "setPeerToPeer"
         self.TCPSocket.send(packet)
 
+
+    #def receivingServerData(self):
+        #self. = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     def handler(self):
         """Handler on explicitly closing the GUI Window."""
         if tkMessageBox.askokcancel("Quit","GPS Car is shutting off"):
-            self.exitClient();
+            self.exitClient()
 
     def exitClient(self):
         """Exit button handler"""
