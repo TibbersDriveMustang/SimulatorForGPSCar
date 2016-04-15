@@ -3,6 +3,7 @@ from Tkinter import *
 import tkMessageBox
 from PIL import Image,ImageTk
 import socket, threading, sys, traceback, os
+import time
 
 class Client:
 
@@ -15,6 +16,7 @@ class Client:
         self.localIP = ""
 
         self.createWidgets()
+
         self.server_addr = serveraddr
         self.server_port = int(serverport)
         self.connectToServer()
@@ -29,6 +31,18 @@ class Client:
         self.setup["command"] = self.sendDataToiOS
         self.setup.grid(row = 1, column = 0, padx = 2, pady = 2)
 
+
+        #Create GPS button
+        #self.GPS = Button(self.master, width = 20, padx = 3, pady = 3)
+        #self.GPS["text"] = "Start GPS"
+        #self.GPS["command"] = self.send
+
+        #Create Listen button
+        self.listen = Button(self.master, width = 20, padx = 3, pady = 3)
+        self.listen["text"] =  "Listening iOS"
+        self.listen["command"] = self.listenToiOS
+        self.listen.grid(row = 1, column = 1, padx = 2, pady = 2)
+
     def connectToServer(self):
         "Connect to server"
         self.TCPSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,6 +50,7 @@ class Client:
             self.TCPSocket.connect((self.server_addr, self.server_port))
         except:
             tkMessageBox.showwarning('Connection Failed', 'Connection to \'%s\' failed.' %self.server_addr)
+
         try:
             self.localIP = (self.TCPSocket.getsockname()[0])
             self.localPort = (self.TCPSocket.getsockname()[1])
@@ -45,12 +60,42 @@ class Client:
             tkMessageBox.showwarning('Failed', 'get local port number failed.')
 
     def sendDataToiOS(self):
-        packet = "setPeerToPeer"
+        packet = raw_input("Enter data: ")
+        #packet = "setPeerToPeer"
         self.TCPSocket.send(packet)
+
+    def listenToiOS(self):
+        """Listen to incoming message"""
+
+        self.listenSocket =socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        #self.listenSocket.bind((self.localIP,self.localPort))
+        self.listenSocket.bind(("",17642))
+        self.listenSocket.listen(5)
+        print "Listening from iOS..."
+
+        #(clientsocket, address) = threading.Thread(target=self.listenSocket.accept).start()
+        threading._start_new_thread(self.listenSocket.accept,self)
+        #self.playEvent = threading.Event()
+        #self.playEvent.clear()
+        #(clientsocket, address) = self.listenSocket.accept()
+        print "Connection Accepted..."
+
+
+
+
+            #data = (connect.recv(1024))
+            #print data
+        #except:
+         #   tkMessageBox.showwarning('Connection Failed','Listening iOS failed...')
+
+
+        #connect,address = self.listenSocket.accept()
 
 
     #def receivingServerData(self):
-        #self. = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+     #   self.localSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      #  try:
+       #     self.localSocket
 
     def handler(self):
         """Handler on explicitly closing the GUI Window."""
@@ -61,6 +106,7 @@ class Client:
         """Exit button handler"""
         self.master.destroy()
         sys.exit(0)
+
 
 
 if __name__ == "__main__":
@@ -75,5 +121,7 @@ if __name__ == "__main__":
 	# Create a new client
 
 	app = Client(root, serverAddr, serverPort)
+
+
 	app.master.title("PythonClient")
 	root.mainloop()
