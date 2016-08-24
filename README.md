@@ -1,2 +1,2 @@
 # SimulatorForGPSCar
-Simulating car actions to App Server
+Simulating car actions to App Server.
